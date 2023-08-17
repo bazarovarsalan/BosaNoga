@@ -1,8 +1,39 @@
 import { Link, NavLink } from "react-router-dom";
-import headerLogo from "../../assets/header-logo.png";
+import headerLogo from "../../../public/assets/header-logo.png";
 import "../../App.css";
+import classNames from "classnames";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useNavigate } from "react-router-dom";
+import { addValueInput } from "../../redux/store/inputSearchSlice";
+import { useEffect, useState } from "react";
+import { fetchCatalogItems } from "../../redux/catalogItemsSlice";
 
 const Header = () => {
+  const [toggleSearchInput, setToggleSearchInput] = useState<boolean>(true);
+  const inputValue = useAppSelector(
+    (state) => state.inputSearch.inputSearch.value
+  );
+  useEffect(() => {}, [inputValue, inputValue]);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { value } = event.target;
+    dispatch(addValueInput(value));
+  };
+
+  const searchClickHandler = () => {
+    if (inputValue == "") {
+      setToggleSearchInput((prev) => !prev);
+      return;
+    }
+    navigate("/catalog");
+    dispatch(
+      fetchCatalogItems({ search: { status: true, value: inputValue } })
+    );
+  };
+
   return (
     <>
       <header className="header-container">
@@ -41,6 +72,7 @@ const Header = () => {
                     <div
                       data-id="search-expander"
                       className="header-controls-pic header-controls-search"
+                      onClick={searchClickHandler}
                     ></div>
                     <div className="header-controls-pic header-controls-cart">
                       <div className="header-controls-cart-full">1</div>
@@ -49,9 +81,17 @@ const Header = () => {
                   </div>
                   <form
                     data-id="search-form"
-                    className="header-controls-search-form form-inline invisible"
+                    className={classNames(
+                      "header-controls-search-form form-inline",
+                      { invisible: toggleSearchInput }
+                    )}
                   >
-                    <input className="form-control" placeholder="Поиск" />
+                    <input
+                      className="form-control"
+                      placeholder="Поиск"
+                      onChange={onChangeHandler}
+                      value={inputValue}
+                    />
                   </form>
                 </div>
               </div>

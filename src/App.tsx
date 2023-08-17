@@ -1,7 +1,7 @@
 import "./App.css";
-import Header from "./components/Header/Header";
+import Header from "./components/header/Header";
 import { Routes, Route } from "react-router";
-import Catalog from "./components/pages/Catalog";
+import CatalogPage from "./components/pages/CatalogPage";
 import Footer from "./components/footer/Footer";
 import Homepage from "./components/pages/Homepage";
 import About from "./components/pages/About";
@@ -14,7 +14,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/catalog" element={<Catalog />} />
+        <Route path="/catalog" element={<CatalogPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contacts" element={<Contacts />} />
         <Route path="*" element={<Page404 />} />

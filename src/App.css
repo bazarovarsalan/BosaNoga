@@ -44,7 +44,7 @@ section {
   height: 32px;
   width: 32px;
   margin: 0 10px;
-  background-image: url(./assets/header-controls-sprite.png);
+  background-image: url(../public/assets/header-controls-sprite.png);
   background-repeat: no-repeat;
   cursor: pointer;
 }
@@ -199,6 +199,10 @@ section {
   color: #fff;
 }
 
+.card-img-top {
+  max-width: 100%;
+  object-fit: cover;
+}
 .catalog-search-form {
   display: block;
   width: 100%;
