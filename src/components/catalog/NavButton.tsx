@@ -1,13 +1,12 @@
 import classNames from "classnames";
 import { ICatalogItem } from "../../redux/store/catalogCategoriesSlice";
-import { HTMLElementEvent } from "./CatalogComponent";
 import { useAppDispatch } from "../../redux/hooks";
 import { fetchCatalogItems } from "../../redux/catalogItemsSlice";
 import { addValueInput } from "../../redux/store/inputSearchSlice";
 
 interface PropsNavBtn {
   elem: ICatalogItem;
-  handleClickSelect: (e: HTMLElementEvent<HTMLButtonElement>) => void;
+  handleClickSelect: (e: React.SyntheticEvent) => void;
   selectedCategory: ICatalogItem;
 }
 
@@ -18,7 +17,7 @@ const NavButton = ({
 }: PropsNavBtn) => {
   const dispatch = useAppDispatch();
 
-  const handleChangeCategory = (event: HTMLElementEvent<HTMLButtonElement>) => {
+  const handleChangeCategory = (event: React.SyntheticEvent) => {
     handleClickSelect(event);
     dispatch(addValueInput(""));
     dispatch(
@@ -30,6 +29,7 @@ const NavButton = ({
     <>
       <li className="nav-item">
         <a
+          href="#"
           className={classNames("nav-link", {
             active: elem.title === selectedCategory.title,
           })}

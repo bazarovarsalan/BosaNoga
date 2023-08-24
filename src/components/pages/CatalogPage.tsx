@@ -1,14 +1,23 @@
 import "../../App.css";
-import banner from "../../../public/assets/banner.jpg";
+import banner from "../../../assets/banner.jpg";
 import CatalogComponent from "../catalog/CatalogComponent";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { addValueInput } from "../../redux/store/inputSearchSlice";
+import { useEffect } from "react";
 
 const CatalogPage = () => {
   const inputSearchValue = useAppSelector(
     (state) => state.inputSearch.inputSearch.value
   );
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(addValueInput(""));
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(addValueInput(""));
+  }, [dispatch]);
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface ITopItems {
   id: string;
@@ -20,7 +20,7 @@ const initialState: IState = {
   error: null,
 };
 
-export const fetchTopSales = createAsyncThunk<{ rejectValue: string }>(
+export const fetchTopSales = createAsyncThunk(
   "topSales/fetchTopSales",
   async function (_, { rejectWithValue }) {
     const response = await fetch("http://localhost:7070/api/top-sales");
@@ -28,7 +28,7 @@ export const fetchTopSales = createAsyncThunk<{ rejectValue: string }>(
       return rejectWithValue("Server error");
     }
     const data = await response.json();
-    return data;
+    return data as ITopItems[];
   }
 );
 
@@ -38,7 +38,7 @@ const topSalesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTopSales.pending, (state, _action) => {
+      .addCase(fetchTopSales.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })
@@ -47,7 +47,6 @@ const topSalesSlice = createSlice({
         state.topItems = action.payload;
       })
       .addCase(fetchTopSales.rejected, (state, action) => {
-        console.log(action);
         state.status = "rejected";
         state.error = action.error.message;
       });

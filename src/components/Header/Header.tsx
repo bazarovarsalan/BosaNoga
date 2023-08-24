@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
-import headerLogo from "../../../public/assets/header-logo.png";
-import "../../App.css";
+import headerLogo from "../../../assets/header-logo.png";
+import "./Header.css";
 import classNames from "classnames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,9 @@ const Header = () => {
   const inputValue = useAppSelector(
     (state) => state.inputSearch.inputSearch.value
   );
+  const cartList = useAppSelector((state) => state.cartAddedItems.cartList);
+
+  const [headerInputValue, setHeaderInputValue] = useState<string>("");
   useEffect(() => {}, [inputValue, inputValue]);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -20,11 +23,11 @@ const Header = () => {
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const { value } = event.target;
-    dispatch(addValueInput(value));
+    setHeaderInputValue(value);
   };
 
   const searchClickHandler = () => {
-    if (inputValue == "") {
+    if (headerInputValue == "") {
       setToggleSearchInput((prev) => !prev);
       return;
     }
@@ -32,6 +35,7 @@ const Header = () => {
     dispatch(
       fetchCatalogItems({ search: { status: true, value: inputValue } })
     );
+    dispatch(addValueInput(headerInputValue));
   };
 
   return (
@@ -74,8 +78,19 @@ const Header = () => {
                       className="header-controls-pic header-controls-search"
                       onClick={searchClickHandler}
                     ></div>
-                    <div className="header-controls-pic header-controls-cart">
-                      <div className="header-controls-cart-full">1</div>
+                    <div
+                      className="header-controls-pic header-controls-cart"
+                      onClick={(event) => {
+                        if (cartList.length === 0) return;
+                        event.preventDefault();
+                        navigate("/cart");
+                      }}
+                    >
+                      {cartList.length > 0 && (
+                        <div className="header-controls-cart-full">
+                          {cartList.length}
+                        </div>
+                      )}
                       <div className="header-controls-cart-menu"></div>
                     </div>
                   </div>
@@ -90,7 +105,7 @@ const Header = () => {
                       className="form-control"
                       placeholder="Поиск"
                       onChange={onChangeHandler}
-                      value={inputValue}
+                      value={headerInputValue}
                     />
                   </form>
                 </div>

@@ -34,10 +34,10 @@ const CatalogComponent = () => {
   );
   // default chosen category "Все";
 
-  const handleClickSelect = (event: HTMLElementEvent<HTMLButtonElement>) => {
+  const handleClickSelect = (event: React.SyntheticEvent) => {
     event.preventDefault();
-    const { id, innerText } = event.target;
-    setSelectedCategory({ id: id, title: innerText });
+    const { id, innerText } = event.target as HTMLElement;
+    setSelectedCategory({ id, title: innerText });
     setQuontityToPassOffset(6);
   };
 
@@ -51,7 +51,7 @@ const CatalogComponent = () => {
   const [quontityToPassOffset, setQuontityToPassOffset] = useState<number>(6);
   //create variable for get request offset items
 
-  const handlerOffset = (event: HTMLElementEvent<HTMLButtonElement>) => {
+  const handlerOffset = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     dispatch(
       fetchCatalogItems({
@@ -85,7 +85,15 @@ const CatalogComponent = () => {
         ) : (
           categoryItems.items &&
           categoryItems.items.map((o) => {
-            return <Items item={o} key={o.id} />;
+            return (
+              <Items
+                image={o.images[0]}
+                title={o.title}
+                price={o.price.toString()}
+                id={o.id.toString()}
+                key={o.id}
+              />
+            );
           })
         )}
       </div>

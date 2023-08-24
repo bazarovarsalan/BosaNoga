@@ -35,7 +35,7 @@ const catalogCategoriesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCatalogCategories.pending, (state, _action) => {
+      .addCase(fetchCatalogCategories.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })

@@ -12,8 +12,8 @@ module.exports = {
   rules: {
     "@typescript-eslint/no-unsafe-member-access": "off",
     "react-refresh/only-export-components": [
-      "warn",
-      { allowConstantExport: true },
+      "off",
+      { allowConstantExport: false },
     ],
   },
 };

@@ -15,7 +15,7 @@
   border-radius: 8px;
   background-color: #ffffff;
   background-repeat: no-repeat;
-  background-image: url("../../assets/footer-sprite.png");
+  background-image: url("../../../assets/footer-sprite.png");
 }
 .footer-pay-systems:not(:first-child) {
   margin-left: 5px;
@@ -49,7 +49,7 @@
   margin: 0 5px;
   border-radius: 50%;
   background-repeat: no-repeat;
-  background-image: url("../../assets/footer-sprite.png");
+  background-image: url("../../../assets/footer-sprite.png");
 }
 .footer-social-link-twitter {
   background-position: -107px -42px;

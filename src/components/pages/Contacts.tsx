@@ -1,5 +1,4 @@
-import banner from "../../../public/assets/banner.jpg";
-import "../../App.css";
+import banner from "../../../assets/banner.jpg";
 
 const Contacts = () => {
   return (

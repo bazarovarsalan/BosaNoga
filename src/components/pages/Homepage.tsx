@@ -1,15 +1,17 @@
 import { useEffect } from "react";
-import banner from "../../../public/assets/banner.jpg";
+import banner from "../../../assets/banner.jpg";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchTopSales } from "../../redux/store/topSalesSlice";
-import { fetchCatalogCategories } from "../../redux/store/catalogCategoriesSlice";
 import "../../App.css";
-import { Link } from "react-router-dom";
 import CatalogComponent from "../catalog/CatalogComponent";
+import Items from "../catalog/Items";
+import Loading from "../Loading";
 
 const Homepage = () => {
   const dispatch = useAppDispatch();
-  const topSaleItems = useAppSelector((state) => state.topSales);
+  const topSaleItems = useAppSelector((state) => state.topSales.topItems);
+  const status = useAppSelector((state) => state.catalogItems.status);
+  const error = useAppSelector((state) => state.catalogItems.error);
 
   useEffect(() => {
     dispatch(fetchTopSales());
@@ -28,57 +30,28 @@ const Homepage = () => {
             <section className="top-sales">
               <h2 className="text-center">Хиты продаж!</h2>
               <div className="row">
-                {topSaleItems.status === "loading" ? (
-                  <div className="preloader">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
+                {status === "loading" ? (
+                  <Loading />
                 ) : (
-                  topSaleItems.topItems &&
-                  topSaleItems.topItems.map((o) => {
+                  topSaleItems &&
+                  topSaleItems.map((o) => {
                     return (
-                      <div className="col-4" key={o.id}>
-                        <div className="card">
-                          <img
-                            src={o.images[0]}
-                            className="card-img-top img-fluid"
-                            alt={o.title}
-                          />
-                          <div className="card-body">
-                            <p className="card-text">
-                              {o.title.split(" ").length < 3
-                                ? o.title
-                                : o.title.split(" ").slice(0, 2).join(" ")}
-                            </p>
-                            <p className="card-text">{o.price} руб.</p>
-                            <Link
-                              to="/catalog"
-                              className="btn btn-outline-primary"
-                            >
-                              Заказать
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
+                      <Items
+                        image={o.images[0]}
+                        title={o.title}
+                        price={o.price}
+                        id={o.id}
+                        key={o.id}
+                      />
                     );
                   })
                 )}
+                {error && <div>{error}</div>}
               </div>
             </section>
             <section className="catalog">
               <h2 className="text-center">Каталог</h2>
-              {topSaleItems.status === "loading" ? (
-                <div className="preloader">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              ) : (
-                <CatalogComponent />
-              )}
+              <CatalogComponent />
             </section>
           </div>
         </div>
