@@ -72,7 +72,7 @@ const Cart = () => {
   const checkoutPriceFoo = (arr: IItemCart[]) => {
     let result = false;
     for (let i = 0; i < arr.length; i++) {
-      fetch(`${import.meta.env.VITE_BOSA_NOGA_API}items/${arr[i].id}`)
+      fetch(`http://localhost:7070/api/items/${arr[i].id}`)
         .then((res) => res.json())
         .then((data) => foo(data));
       const foo = ({ price }: IItem) => {

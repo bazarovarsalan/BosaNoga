@@ -101,17 +101,14 @@ const CatalogComponent = () => {
           </div>
         </div>
       )}
-      {categoryItems.items.length >= 6 && (
-        <div className="text-center">
-          <button
-            className="btn btn-outline-primary"
-            onClick={handlerOffset}
-            disabled={categoryItems.status === "loading"}
-          >
-            Загрузить ещё
-          </button>
-        </div>
-      )}
+      {categoryItems.status === "resolved" &&
+        categoryItems.items.length >= 6 && (
+          <div className="text-center">
+            <button className="btn btn-outline-primary" onClick={handlerOffset}>
+              Загрузить ещё
+            </button>
+          </div>
+        )}
     </>
   );
 };
