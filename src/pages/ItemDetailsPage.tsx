@@ -1,13 +1,13 @@
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import banner from "../../../assets/banner.jpg";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import banner from "../../assets/banner.jpg";
 import { useParams } from "react-router";
-import { fetchItemDetails } from "../../redux/store/itemDetailsSlice";
+import { fetchItemDetails } from "../redux/itemDetailsSlice";
 import { useEffect } from "react";
 import { useState } from "react";
 import classNames from "classnames";
-import "../../App.css";
+import "../App.css";
 import { useNavigate } from "react-router";
-import { addToCartItem } from "../../redux/store/cartAddedItemsSlice";
+import { addToCartItem } from "../redux/cartAddedItemsSlice";
 
 const ItemDetailsPage = () => {
   const item = useAppSelector((state) => state.itemDetails.item);

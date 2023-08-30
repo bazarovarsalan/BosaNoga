@@ -1,17 +1,17 @@
 import { useEffect } from "react";
-import banner from "../../../assets/banner.jpg";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { fetchTopSales } from "../../redux/store/topSalesSlice";
-import "../../App.css";
-import CatalogComponent from "../catalog/CatalogComponent";
-import Items from "../catalog/Items";
-import Loading from "../Loading";
+import banner from "../../assets/banner.jpg";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { fetchTopSales } from "../redux/topSalesSlice";
+import "../App.css";
+import CatalogComponent from "../components/catalog/CatalogComponent";
+import Items from "../components/catalog/Items";
+import Loading from "../components/Loading";
+import ErrorComponent from "../components/ErrorComponent";
 
 const Homepage = () => {
   const dispatch = useAppDispatch();
   const topSaleItems = useAppSelector((state) => state.topSales.topItems);
   const status = useAppSelector((state) => state.catalogItems.status);
-  const error = useAppSelector((state) => state.catalogItems.error);
 
   useEffect(() => {
     dispatch(fetchTopSales());
@@ -29,12 +29,10 @@ const Homepage = () => {
             </div>
             <section className="top-sales">
               <h2 className="text-center">Хиты продаж!</h2>
-              <div className="row">
-                {status === "loading" ? (
-                  <Loading />
-                ) : (
-                  topSaleItems &&
-                  topSaleItems.map((o) => {
+              {status === "loading" && <Loading />}
+              {status === "resolved" && topSaleItems && (
+                <div className="row">
+                  {topSaleItems.map((o) => {
                     return (
                       <Items
                         image={o.images[0]}
@@ -44,10 +42,16 @@ const Homepage = () => {
                         key={o.id}
                       />
                     );
-                  })
-                )}
-                {error && <div>{error}</div>}
-              </div>
+                  })}
+                </div>
+              )}
+              {status === "rejected" && (
+                <ErrorComponent
+                  repeatSubmit={() => {
+                    dispatch(fetchTopSales());
+                  }}
+                />
+              )}
             </section>
             <section className="catalog">
               <h2 className="text-center">Каталог</h2>

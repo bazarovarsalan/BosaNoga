@@ -32,7 +32,7 @@ const initialState: IStateForOrder = {
 export const fetchPostOrder = createAsyncThunk<unknown, IAsyncParams>(
   "placeTheOrder/fetchPlaceTheOrder",
   async function (asyncParams) {
-    const response = await fetch(`http://localhost:7070/api/order`, {
+    const response = await fetch(`${import.meta.env.VITE_BOSA_NOGA_API}order`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(asyncParams),
@@ -62,13 +62,13 @@ const placeTheOrderSlice = createSlice({
         state.status = "loading";
         state.error = null;
       })
-      .addCase(fetchPostOrder.rejected, (state, action) => {
-        state.status = "rejected";
-        state.error = action.error.message;
-      })
       .addCase(fetchPostOrder.fulfilled, (state) => {
         state.status = "resolved";
         state.error = null;
+      })
+      .addCase(fetchPostOrder.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.error.message;
       });
   },
 });

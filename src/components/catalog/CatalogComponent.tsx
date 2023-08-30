@@ -1,16 +1,12 @@
-import { ICatalogItem } from "../../redux/store/catalogCategoriesSlice";
+import { ICatalogItem } from "../../redux/catalogCategoriesSlice";
 import { useEffect, useState } from "react";
 import "../../App.css";
 import NavButton from "./NavButton";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchCatalogItems } from "../../redux/catalogItemsSlice";
 import Items from "./Items";
-import { fetchCatalogCategories } from "../../redux/store/catalogCategoriesSlice";
+import { fetchCatalogCategories } from "../../redux/catalogCategoriesSlice";
 import Loading from "../Loading";
-
-export type HTMLElementEvent<T extends HTMLElement> = Event & {
-  target: T;
-};
 
 const CatalogComponent = () => {
   const catalogCategoriesFromServer = useAppSelector(
@@ -79,12 +75,10 @@ const CatalogComponent = () => {
           );
         })}
       </ul>
-      <div className="row">
-        {categoryItems.status === "loading" ? (
-          <Loading />
-        ) : (
-          categoryItems.items &&
-          categoryItems.items.map((o) => {
+      {categoryItems.status === "loading" && <Loading />}
+      {categoryItems.status === "resolved" && categoryItems.items && (
+        <div className="row gy-3">
+          {categoryItems.items.map((o) => {
             return (
               <Items
                 image={o.images[0]}
@@ -94,9 +88,19 @@ const CatalogComponent = () => {
                 key={o.id}
               />
             );
-          })
-        )}
-      </div>
+          })}
+        </div>
+      )}
+      {categoryItems.status === "resolved" && !categoryItems.items.length && (
+        <div className="row gy-3">
+          <div
+            className="card w-120 text-center"
+            style={{ marginTop: "100px" }}
+          >
+            <div className="card-body">В данной категории нет товаров.</div>
+          </div>
+        </div>
+      )}
       {categoryItems.items.length >= 6 && (
         <div className="text-center">
           <button

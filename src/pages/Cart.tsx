@@ -1,17 +1,19 @@
-import banner from "../../../assets/banner.jpg";
-import "../../App.css";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { removeFromCart } from "../../redux/store/cartAddedItemsSlice";
+import banner from "../../assets/banner.jpg";
+import "../App.css";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { removeFromCart } from "../redux/cartAddedItemsSlice";
 import {
   addInputAdressForOrder,
   addInputPhoneForOrder,
-} from "../../redux/store/placeTheOrderSlice";
+} from "../redux/placeTheOrderSlice";
 import { useEffect, useState } from "react";
-import { fetchPostOrder } from "../../redux/store/placeTheOrderSlice";
-import { clearCart } from "../../redux/store/cartAddedItemsSlice";
-import { clearState } from "../../redux/store/placeTheOrderSlice";
-import ErrorComponent from "../ErrorComponent";
-import Loading from "../Loading";
+import { fetchPostOrder } from "../redux/placeTheOrderSlice";
+import { clearCart } from "../redux/cartAddedItemsSlice";
+import { clearState } from "../redux/placeTheOrderSlice";
+import ErrorComponent from "../components/ErrorComponent";
+import Loading from "../components/Loading";
+import { IItemCart } from "../redux/cartAddedItemsSlice";
+import { IItem } from "../redux/itemDetailsSlice";
 
 const Cart = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +33,9 @@ const Cart = () => {
   });
 
   const [validPhone, setValidPhone] = useState<boolean | null>(null);
+
+  const [checkChangePriceOfCartItems, setCheckChangePriceOfCartItems] =
+    useState<boolean>(false);
 
   const onChangeHandlerPhone = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -64,8 +69,28 @@ const Cart = () => {
     setAgreement(event.target.checked);
   };
 
+  const checkoutPriceFoo = (arr: IItemCart[]) => {
+    let result = false;
+    for (let i = 0; i < arr.length; i++) {
+      fetch(`${import.meta.env.VITE_BOSA_NOGA_API}items/${arr[i].id}`)
+        .then((res) => res.json())
+        .then((data) => foo(data));
+      const foo = ({ price }: IItem) => {
+        if (price !== arr[i].price) {
+          result = true;
+        }
+      };
+    }
+    return result;
+  };
+
   const sendOrderSubmit = (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    const check = checkoutPriceFoo(cartList); // true or false
+    setCheckChangePriceOfCartItems(check);
+    if (check) {
+      return;
+    }
     dispatch(fetchPostOrder({ owner: inputOfOwner, items }));
   };
 
@@ -207,13 +232,22 @@ const Cart = () => {
                         Оформить
                       </button>
                     )}
+                    {checkChangePriceOfCartItems && (
+                      <div
+                        className="alert alert-warning d-flex justify-content-center"
+                        role="alert"
+                      >
+                        На один или несколько товаров из вашей корзины
+                        изменилась цена. Рекомендуем ознакомиться с указанными
+                        изменениями в карточке товара
+                      </div>
+                    )}
                     {status === "resolved" && (
                       <div
                         className="alert alert-success d-flex justify-content-center"
                         role="alert"
                       >
-                        Сообщение об успехе. Ваш товар оформлен! Поздравляем с
-                        покупкой!
+                        Ваш заказ оформлен! Поздравляем с покупкой!
                       </div>
                     )}
                   </form>

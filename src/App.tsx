@@ -1,14 +1,14 @@
 import Header from "./components/header/Header";
 import "./App.css";
 import { Routes, Route } from "react-router";
-import CatalogPage from "./components/pages/CatalogPage";
+import CatalogPage from "./pages/CatalogPage";
 import Footer from "./components/footer/Footer";
-import Homepage from "./components/pages/Homepage";
-import About from "./components/pages/About";
-import Contacts from "./components/pages/Contacts";
-import Page404 from "./components/pages/Page404";
-import ItemDetailsPage from "./components/pages/ItemDetailsPage";
-import Cart from "./components/pages/Cart";
+import Homepage from "./pages/Homepage";
+import About from "./pages/About";
+import Contacts from "./pages/Contacts";
+import Page404 from "./pages/Page404";
+import ItemDetailsPage from "./pages/ItemDetailsPage";
+import Cart from "./pages/Cart";
 
 function App() {
   return (

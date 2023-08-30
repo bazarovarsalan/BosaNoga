@@ -20,7 +20,9 @@ const initialState: IState = {
 export const fetchCatalogCategories = createAsyncThunk(
   "catalogCategories/fetchCatalog",
   async function () {
-    const response = await fetch("http://localhost:7070/api/categories");
+    const response = await fetch(
+      `${import.meta.env.VITE_BOSA_NOGA_API}categories`
+    );
     if (!response.ok) {
       throw Error("Server error");
     }

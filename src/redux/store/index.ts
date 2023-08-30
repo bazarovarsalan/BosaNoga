@@ -1,11 +1,11 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import topSalesSlice from "./topSalesSlice";
-import catalogCategoriesSlice from "./catalogCategoriesSlice";
+import topSalesSlice from "../topSalesSlice";
+import catalogCategoriesSlice from "../catalogCategoriesSlice";
 import catalogItemsSlice from "../catalogItemsSlice";
-import inputSearchSlice from "./inputSearchSlice";
-import itemDetailsSlice from "./itemDetailsSlice";
-import cartAddedItemsSlice from "./cartAddedItemsSlice";
-import placeTheOrderSlice from "./placeTheOrderSlice";
+import inputSearchSlice from "../inputSearchSlice";
+import itemDetailsSlice from "../itemDetailsSlice";
+import cartAddedItemsSlice from "../cartAddedItemsSlice";
+import placeTheOrderSlice from "../placeTheOrderSlice";
 import {
   persistStore,
   persistReducer,

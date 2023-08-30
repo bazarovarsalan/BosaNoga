@@ -4,38 +4,43 @@ import "./Header.css";
 import classNames from "classnames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
-import { addValueInput } from "../../redux/store/inputSearchSlice";
-import { useEffect, useState } from "react";
+import { addValueInput } from "../../redux/inputSearchSlice";
 import { fetchCatalogItems } from "../../redux/catalogItemsSlice";
+import { changeToggleInput } from "../../redux/inputSearchSlice";
 
 const Header = () => {
-  const [toggleSearchInput, setToggleSearchInput] = useState<boolean>(true);
-  const inputValue = useAppSelector(
+  const toggleSearchInput = useAppSelector(
+    (state) => state.inputSearch.inputSearch.toggleSearchInput
+  );
+  const inputSearchValue = useAppSelector(
     (state) => state.inputSearch.inputSearch.value
   );
+
   const cartList = useAppSelector((state) => state.cartAddedItems.cartList);
 
-  const [headerInputValue, setHeaderInputValue] = useState<string>("");
-  useEffect(() => {}, [inputValue, inputValue]);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const { value } = event.target;
-    setHeaderInputValue(value);
+    dispatch(addValueInput(value));
   };
 
   const searchClickHandler = () => {
-    if (headerInputValue == "") {
-      setToggleSearchInput((prev) => !prev);
+    if (inputSearchValue == "") {
+      dispatch(changeToggleInput());
       return;
     }
     navigate("/catalog");
-    dispatch(
-      fetchCatalogItems({ search: { status: true, value: inputValue } })
-    );
-    dispatch(addValueInput(headerInputValue));
+    setTimeout(() => {
+      dispatch(
+        fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
+      );
+    }, 100);
+    // this SetTimeout func is used because when you go to the "/catalog" page,
+    //useEffect sends a "get" request to take all product categories and overwrites
+    //the data received by the request "search"
   };
 
   return (
@@ -105,7 +110,7 @@ const Header = () => {
                       className="form-control"
                       placeholder="Поиск"
                       onChange={onChangeHandler}
-                      value={headerInputValue}
+                      value={inputSearchValue}
                     />
                   </form>
                 </div>

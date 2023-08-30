@@ -1,30 +1,83 @@
-# React + TypeScript + Vite
+## Интернет-магазин обуви "Bosa Noga"
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+https://github.com/bazarovarsalan/BosaNoga.git
 
-Currently, two official plugins are available:
+## Используемые технологии
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- Typescript
+- Redux Toolkit
+- Redux Thunk
+- Redux Persist (для реализации и хранения данных в local storage)
+- React Router
+- Node.js
 
-## Expanding the ESLint configuration
+## Описание
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Проект представляет собой frontend-реализацию интернет-магазина обуви с динамической подгрузкой каталога продукции с сервера, фильтрацией, поиском и возможностью оформления заказа.
 
-- Configure the top-level `parserOptions` property like this:
+## Содержание
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+Приложение содержит следующие самостоятельные экраны (страницы):
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
-# BosaNoga
-# BosaNoga
-# BosaNoga
+1. Главная страница.
+1. Каталог товаров.
+1. Информационная страница.
+1. Страница товара.
+1. Корзина.
+1. 404
+
+![MainPage](./readme_pictures/main.png)
+![Catalog](./readme_pictures/catalog.png)
+![Details](./readme_pictures/details.png)
+![Search](./readme_pictures/search.png)
+![Cart](./readme_pictures/Cart.png)
+
+## Переходы между экранами
+
+Навигационным центром приложения являются шапка и футер каждого экрана (страницы):
+
+Из шапки можно попасть на следующие экраны:
+
+- логотип и ссылка «Главная» — ведут на главную страницу, URL — "/";
+- каталог — ведёт на страницу каталога, URL — "/catalog";
+- о магазине — ведёт на страницу «О магазине», URL — "/about";
+- контакты — ведёт на страницу «Контакты», URL — "/contacts".
+
+Из футера можно попасть на следующие экраны:
+
+- о магазине — ведёт на страницу «О магазине», URL — "/about";
+- каталог — ведёт на страницу каталога, URL — "/catalog";
+- контакты — ведёт на страницу «Контакты», URL — "/contacts".
+
+## REDUX
+
+В проекте реализованые следующие редюсеры:
+
+- topSales (получение товаров - "Хиты продаж"),
+- catalogCategories (получение категорий товаров),
+- catalogItems (получение товаров соответсвующей категории),
+- inputSearch (значение для поиска)
+- itemDetails (загрузка данных о выбранном товаре)
+- cartAddedItems (товары добавленные в корзину)
+- placeTheOrder (запрос на покупку товаров из корзины)
+
+Profi Level
+
+В представленном проекте нашли свое отражение поставленные проблемы:
+
+- Как обрабатывать ситуацию, при которой пользователь покупал товар по одной цене, а когда решил купить, выяснилось, что цена поменялась?
+
+- Ответ: на странице Cart используется функция checkoutPriceFoo направляющая запрос на сервер с целью сравнения каждого товара на предмет соответствия цены, в случае изменения цены функция возвращает булевое значение - true.
+  Вызов функции осуществляется при попытке пользователя оплатить товар. При изменении цены, последнему сообщается об этом с рекомендацией ознакомиться с указанными изменениями в карточке товара пользователь.
+
+Как бороться с тем, что приходящие картинки не одинаковые по размеру?
+
+Ответ: У элемента <img> с className: "card-img-top" применено свойство object-fit со значение contain.
+
+Что показывать пользователю, если поиск не дал результатов?
+В случае если поиск не дал результатов на странице Каталога отображается информация о том, что "В данной категории нет товаров"
+
+Каким образом отображать сообщения об ошибке, чтобы либо автоматически, либо с помощью пользователя чуть позже повторно выполнить запрос (без полной перезагрузки страницы)?
+
+Ответ: При ошибке пользователю с помощью компонента ErrorComponent отображается информация об ошибке с кнопкой "Повторить запрос"

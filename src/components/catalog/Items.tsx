@@ -17,11 +17,9 @@ const Items = ({ image, title, price, id }: ItemsProps) => {
   };
 
   return (
-    <div className="col-4">
+    <div className="col-md-6 col-lg-4">
       <div className="card catalog-item-card">
-        <div className="img-container">
-          <img className="card-img-top" src={image}></img>
-        </div>
+        <img className="card-img-top img fluid" src={image}></img>
         <div className="card-body">
           <p className="card-text">{title}</p>
           <p className="card-text">{price} руб.</p>

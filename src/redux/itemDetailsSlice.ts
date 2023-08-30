@@ -8,7 +8,7 @@ export interface IItem {
   heelSize: string;
   id: number;
   images: string[];
-  manufactur: string;
+  manufactur?: string;
   material: string;
   price: number;
   reason: string;
@@ -35,7 +35,9 @@ export const fetchItemDetails = createAsyncThunk<
   string | undefined,
   { rejectValue: string }
 >("itemDetails/fetchItemDetails", async function (id, { rejectWithValue }) {
-  const response = await fetch(`http://localhost:7070/api/items/${id}`);
+  const response = await fetch(
+    `${import.meta.env.VITE_BOSA_NOGA_API}items/${id}`
+  );
   if (!response.ok) {
     return rejectWithValue("Server error");
   }

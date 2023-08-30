@@ -1,8 +1,8 @@
-import "../../App.css";
-import banner from "../../../assets/banner.jpg";
-import CatalogComponent from "../catalog/CatalogComponent";
-import { useAppSelector, useAppDispatch } from "../../redux/hooks";
-import { addValueInput } from "../../redux/store/inputSearchSlice";
+import "../App.css";
+import banner from "../../assets/banner.jpg";
+import CatalogComponent from "../components/catalog/CatalogComponent";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
+import { addValueInput } from "../redux/inputSearchSlice";
 import { useEffect } from "react";
 
 const CatalogPage = () => {

@@ -1,5 +1,5 @@
-import banner from "../../../assets/banner.jpg";
-import "../../App.css";
+import banner from "../../assets/banner.jpg";
+import "../App.css";
 
 const About = () => {
   return (

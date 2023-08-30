@@ -140,6 +140,8 @@ section {
 
 .card-img-top {
   width: 100%;
+  height: 30vh;
+  object-fit: contain;
 }
 .card-body {
   height: 20%;
@@ -161,20 +163,6 @@ section {
   border: none;
   outline: none;
   box-shadow: none;
-}
-
-.img-container {
-  position: relative;
-  padding-top: 80%; /* 16:9 Aspect Ratio */
-  height: 80%;
-}
-
-.img-container img {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
 }
 
 /* Bootstrap */

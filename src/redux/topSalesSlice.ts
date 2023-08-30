@@ -23,7 +23,9 @@ const initialState: IState = {
 export const fetchTopSales = createAsyncThunk(
   "topSales/fetchTopSales",
   async function (_, { rejectWithValue }) {
-    const response = await fetch("http://localhost:7070/api/top-sales");
+    const response = await fetch(
+      `${import.meta.env.VITE_BOSA_NOGA_API}top-sales`
+    );
     if (!response.ok) {
       return rejectWithValue("Server error");
     }

@@ -28,7 +28,7 @@ interface IAsyncParams {
 }
 
 export const fetchCatalogItems = createAsyncThunk<
-  CatalogItem,
+  CatalogItem[],
   IAsyncParams,
   { rejectValue: string }
 >(
@@ -37,14 +37,22 @@ export const fetchCatalogItems = createAsyncThunk<
     const urlFoo = () => {
       if (asyncParams.get?.status) {
         return !(asyncParams.get?.id === "All")
-          ? `http://localhost:7070/api/items?categoryId=${asyncParams.get.id}`
-          : "http://localhost:7070/api/items";
+          ? `${import.meta.env.VITE_BOSA_NOGA_API}items?categoryId=${
+              asyncParams.get.id
+            }`
+          : `${import.meta.env.VITE_BOSA_NOGA_API}items`;
       } else if (asyncParams.offset?.status) {
         return !(asyncParams.offset?.id === "All")
-          ? `http://localhost:7070/api/items?categoryId=${asyncParams.offset.id}&offset=${asyncParams.offset?.quontityToOffset}`
-          : `http://localhost:7070/api/items?offset=${asyncParams.offset.quontityToOffset}`;
+          ? `${import.meta.env.VITE_BOSA_NOGA_API}items?categoryId=${
+              asyncParams.offset.id
+            }&offset=${asyncParams.offset?.quontityToOffset}`
+          : `${import.meta.env.VITE_BOSA_NOGA_API}items?offset=${
+              asyncParams.offset.quontityToOffset
+            }`;
       } else if (asyncParams.search?.status) {
-        return `http://localhost:7070/api/items?q=${asyncParams.search.value}`;
+        return `${import.meta.env.VITE_BOSA_NOGA_API}items?q=${
+          asyncParams.search.value
+        }`;
       }
     };
     // this function returns string url adress for fetch depends of type of request
@@ -53,10 +61,10 @@ export const fetchCatalogItems = createAsyncThunk<
 
     const response = await fetch(url);
     if (!response.ok) {
-      throw Error("Server error");
+      return rejectWithValue("Server error");
     }
     const data = await response.json();
-    return data as CatalogItem;
+    return data as CatalogItem[];
   }
 );
 
@@ -66,14 +74,17 @@ const catalogItemsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCatalogItems.pending, (state, _action) => {
+      .addCase(fetchCatalogItems.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })
-      .addCase(fetchCatalogItems.fulfilled, (state, action) => {
-        state.status = "resolved";
-        state.items = action.payload;
-      })
+      .addCase(
+        fetchCatalogItems.fulfilled,
+        (state, action: PayloadAction<CatalogItem[]>) => {
+          state.status = "resolved";
+          state.items = action.payload;
+        }
+      )
       .addMatcher(isError, (state, action: PayloadAction<string>) => {
         state.error = action.payload;
         state.status = "rejected";
