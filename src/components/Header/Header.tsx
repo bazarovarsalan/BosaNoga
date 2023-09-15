@@ -43,6 +43,24 @@ const Header = () => {
     //the data received by the request "search"
   };
 
+  const searchKeyDownHandler = (event: React.KeyboardEvent) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    if (inputSearchValue == "") {
+      dispatch(changeToggleInput());
+      return;
+    }
+    navigate("/catalog");
+    setTimeout(() => {
+      dispatch(
+        fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
+      );
+    }, 100);
+    // this SetTimeout func is used because when you go to the "/catalog" page,
+    //useEffect sends a "get" request to take all product categories and overwrites
+    //the data received by the request "search"
+  };
+
   return (
     <>
       <header className="header-container">
@@ -108,9 +126,11 @@ const Header = () => {
                   >
                     <input
                       className="form-control"
+                      type="text"
                       placeholder="Поиск"
                       onChange={onChangeHandler}
                       value={inputSearchValue}
+                      onKeyDown={searchKeyDownHandler}
                     />
                   </form>
                 </div>

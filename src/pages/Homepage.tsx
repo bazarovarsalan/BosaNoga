@@ -11,7 +11,7 @@ import ErrorComponent from "../components/ErrorComponent";
 const Homepage = () => {
   const dispatch = useAppDispatch();
   const topSaleItems = useAppSelector((state) => state.topSales.topItems);
-  const status = useAppSelector((state) => state.catalogItems.status);
+  const status = useAppSelector((state) => state.topSales.status);
 
   useEffect(() => {
     dispatch(fetchTopSales());

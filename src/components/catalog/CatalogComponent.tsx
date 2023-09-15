@@ -7,6 +7,7 @@ import { fetchCatalogItems } from "../../redux/catalogItemsSlice";
 import Items from "./Items";
 import { fetchCatalogCategories } from "../../redux/catalogCategoriesSlice";
 import Loading from "../Loading";
+import ErrorComponent from "../ErrorComponent";
 
 const CatalogComponent = () => {
   const catalogCategoriesFromServer = useAppSelector(
@@ -23,7 +24,7 @@ const CatalogComponent = () => {
     { id: "All", title: "Все" },
     ...catalogCategoriesFromServer.categories,
   ];
-  //create "All" category
+  //create "All" category if catalog categories has downloaded
 
   const [selectedCategory, setSelectedCategory] = useState<ICatalogItem>(
     catalogCategoriesAll[0]
@@ -61,19 +62,22 @@ const CatalogComponent = () => {
     setQuontityToPassOffset((prev) => prev + 6);
   };
 
+  console.log(categoryItems.status);
+
   return (
     <>
       <ul className="catalog-categories nav justify-content-center">
-        {catalogCategoriesAll.map((o) => {
-          return (
-            <NavButton
-              key={o.id}
-              elem={o}
-              handleClickSelect={handleClickSelect}
-              selectedCategory={selectedCategory}
-            />
-          );
-        })}
+        {catalogCategoriesFromServer.categories &&
+          catalogCategoriesAll.map((o) => {
+            return (
+              <NavButton
+                key={o.id}
+                elem={o}
+                handleClickSelect={handleClickSelect}
+                selectedCategory={selectedCategory}
+              />
+            );
+          })}
       </ul>
       {categoryItems.status === "loading" && <Loading />}
       {categoryItems.status === "resolved" && categoryItems.items && (
@@ -90,6 +94,17 @@ const CatalogComponent = () => {
             );
           })}
         </div>
+      )}
+      {categoryItems.status === "rejected" && (
+        <ErrorComponent
+          repeatSubmit={() => {
+            dispatch(
+              fetchCatalogItems({
+                get: { status: true, id: "All" },
+              })
+            );
+          }}
+        />
       )}
       {categoryItems.status === "resolved" && !categoryItems.items.length && (
         <div className="row gy-3">

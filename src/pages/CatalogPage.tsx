@@ -4,12 +4,17 @@ import CatalogComponent from "../components/catalog/CatalogComponent";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { addValueInput } from "../redux/inputSearchSlice";
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import { fetchCatalogItems } from "../redux/catalogItemsSlice";
+import { changeToggleInput } from "../redux/inputSearchSlice";
 
 const CatalogPage = () => {
   const inputSearchValue = useAppSelector(
     (state) => state.inputSearch.inputSearch.value
   );
   const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(addValueInput(""));
@@ -23,6 +28,24 @@ const CatalogPage = () => {
     event.preventDefault();
     const { value } = event.target;
     dispatch(addValueInput(value));
+  };
+
+  const searchKeyDownHandler = (event: React.KeyboardEvent) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    if (inputSearchValue == "") {
+      dispatch(changeToggleInput());
+      return;
+    }
+    navigate("/catalog");
+    setTimeout(() => {
+      dispatch(
+        fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
+      );
+    }, 100);
+    // this SetTimeout func is used because when you go to the "/catalog" page,
+    //useEffect sends a "get" request to take all product categories and overwrites
+    //the data received by the request "search"
   };
 
   return (
@@ -42,6 +65,7 @@ const CatalogPage = () => {
                   placeholder="Поиск"
                   onChange={onChangeHandler}
                   value={inputSearchValue}
+                  onKeyDown={searchKeyDownHandler}
                 />
               </form>
               {<CatalogComponent />}
