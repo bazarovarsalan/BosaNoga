@@ -14,6 +14,9 @@ const CatalogComponent = () => {
     (state) => state.catalogCategories
   );
   const dispatch = useAppDispatch();
+  const displayInputedSearch = useAppSelector(
+    (state) => state.inputSearch.inputSearch.displaySearchingItem
+  );
 
   useEffect(() => {
     dispatch(fetchCatalogCategories());
@@ -42,8 +45,9 @@ const CatalogComponent = () => {
   //take catalog items despite of category
 
   useEffect(() => {
+    if (displayInputedSearch !== "") return;
     dispatch(fetchCatalogItems({ get: { status: true, id: "All" } }));
-  }, [dispatch]);
+  }, [dispatch, displayInputedSearch]);
 
   const [quontityToPassOffset, setQuontityToPassOffset] = useState<number>(6);
   //create variable for get request offset items
@@ -62,12 +66,18 @@ const CatalogComponent = () => {
     setQuontityToPassOffset((prev) => prev + 6);
   };
 
-  console.log(categoryItems.status);
-
   return (
     <>
       <ul className="catalog-categories nav justify-content-center">
-        {catalogCategoriesFromServer.categories &&
+        {catalogCategoriesFromServer.status === "rejected" && (
+          <ErrorComponent
+            repeatSubmit={() => {
+              dispatch(fetchCatalogCategories());
+            }}
+          />
+        )}
+        {catalogCategoriesFromServer.status === "resolved" &&
+          catalogCategoriesFromServer.categories &&
           catalogCategoriesAll.map((o) => {
             return (
               <NavButton
@@ -80,22 +90,23 @@ const CatalogComponent = () => {
           })}
       </ul>
       {categoryItems.status === "loading" && <Loading />}
-      {categoryItems.status === "resolved" && categoryItems.items && (
-        <div className="row gy-3">
-          {categoryItems.items.map((o) => {
-            return (
-              <Items
-                image={o.images[0]}
-                title={o.title}
-                price={o.price.toString()}
-                id={o.id.toString()}
-                key={o.id}
-              />
-            );
-          })}
-        </div>
-      )}
-      {categoryItems.status === "rejected" && (
+      {catalogCategoriesFromServer.status === "resolved" &&
+        categoryItems.items && (
+          <div className="row gy-3">
+            {categoryItems.items.map((o) => {
+              return (
+                <Items
+                  image={o.images[0]}
+                  title={o.title}
+                  price={o.price.toString()}
+                  id={o.id.toString()}
+                  key={o.id}
+                />
+              );
+            })}
+          </div>
+        )}
+      {categoryItems.status === "rejected" && !categoryItems.items && (
         <ErrorComponent
           repeatSubmit={() => {
             dispatch(

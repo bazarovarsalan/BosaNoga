@@ -2,13 +2,20 @@ import "../App.css";
 import banner from "../../assets/banner.jpg";
 import CatalogComponent from "../components/catalog/CatalogComponent";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
-import { addValueInput } from "../redux/inputSearchSlice";
+import {
+  addValueInput,
+  toDisplaySearchingItem,
+} from "../redux/inputSearchSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { fetchCatalogItems } from "../redux/catalogItemsSlice";
 import { changeToggleInput } from "../redux/inputSearchSlice";
 
 const CatalogPage = () => {
+  const displaySearchingValue = useAppSelector(
+    (state) => state.inputSearch.inputSearch.displaySearchingItem
+  );
+
   const inputSearchValue = useAppSelector(
     (state) => state.inputSearch.inputSearch.value
   );
@@ -38,14 +45,15 @@ const CatalogPage = () => {
       return;
     }
     navigate("/catalog");
-    setTimeout(() => {
-      dispatch(
-        fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
-      );
-    }, 100);
-    // this SetTimeout func is used because when you go to the "/catalog" page,
-    //useEffect sends a "get" request to take all product categories and overwrites
-    //the data received by the request "search"
+    dispatch(
+      fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
+    );
+    dispatch(toDisplaySearchingItem(inputSearchValue));
+  };
+
+  const handleClearInputClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    dispatch(toDisplaySearchingItem(""));
   };
 
   return (
@@ -61,10 +69,10 @@ const CatalogPage = () => {
               <h2 className="text-center">Каталог</h2>
               <form className="catalog-search-form form-inline">
                 <input
-                  className="form-control"
+                  className="form-control me-2"
                   placeholder="Поиск"
                   onChange={onChangeHandler}
-                  value={inputSearchValue}
+                  value={displaySearchingValue}
                   onKeyDown={searchKeyDownHandler}
                 />
               </form>

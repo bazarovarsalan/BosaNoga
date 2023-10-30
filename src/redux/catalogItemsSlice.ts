@@ -24,7 +24,7 @@ const initialState: IStateCatalogItems = {
 interface IAsyncParams {
   get?: { status: boolean; id?: string };
   offset?: { status: boolean; id?: string; quontityToOffset: number };
-  search?: { status: boolean; value: string };
+  search?: { status: boolean; value: string; id?: string };
 }
 
 export const fetchCatalogItems = createAsyncThunk<
@@ -50,9 +50,13 @@ export const fetchCatalogItems = createAsyncThunk<
               asyncParams.offset.quontityToOffset
             }`;
       } else if (asyncParams.search?.status) {
-        return `${import.meta.env.VITE_BOSA_NOGA_API}items?q=${
-          asyncParams.search.value
-        }`;
+        return asyncParams.search.id && asyncParams.search?.id !== "All"
+          ? `${import.meta.env.VITE_BOSA_NOGA_API}items?categoryId=${
+              asyncParams.search.id
+            }&q=${asyncParams.search.value}`
+          : `${import.meta.env.VITE_BOSA_NOGA_API}items?q=${
+              asyncParams.search.value
+            }`;
       }
     };
     // this function returns string url adress for fetch depends of type of request

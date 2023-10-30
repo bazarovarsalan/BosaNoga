@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type TInputSearch = {
   value: string;
   toggleSearchInput: boolean;
+  displaySearchingItem: string;
 };
 
 type InputValueState = {
@@ -10,7 +11,7 @@ type InputValueState = {
 };
 
 const initialState: InputValueState = {
-  inputSearch: { value: "", toggleSearchInput: true },
+  inputSearch: { value: "", toggleSearchInput: true, displaySearchingItem: "" },
 };
 
 const inputSearchSlice = createSlice({
@@ -24,9 +25,13 @@ const inputSearchSlice = createSlice({
       state.inputSearch.toggleSearchInput =
         !state.inputSearch.toggleSearchInput;
     },
+    toDisplaySearchingItem: (state, action: PayloadAction<string>) => {
+      state.inputSearch.displaySearchingItem = action.payload;
+    },
   },
 });
 
-export const { addValueInput, changeToggleInput } = inputSearchSlice.actions;
+export const { addValueInput, changeToggleInput, toDisplaySearchingItem } =
+  inputSearchSlice.actions;
 
 export default inputSearchSlice.reducer;

@@ -22,7 +22,15 @@ const cartAddedItemsSlice = createSlice({
   initialState,
   reducers: {
     addToCartItem: (state, action: PayloadAction<IItemCart>) => {
-      state.cartList = [...state.cartList, action.payload];
+      const isTheSameItem = state.cartList.find(
+        (o) => o.id === action.payload.id
+      );
+      if (isTheSameItem) {
+        isTheSameItem.quontity =
+          isTheSameItem.quontity + action.payload.quontity;
+      } else {
+        state.cartList = [...state.cartList, action.payload];
+      }
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
       state.cartList = state.cartList.filter((el) => el.id !== action.payload);

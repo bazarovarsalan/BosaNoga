@@ -6,7 +6,10 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
 import { addValueInput } from "../../redux/inputSearchSlice";
 import { fetchCatalogItems } from "../../redux/catalogItemsSlice";
-import { changeToggleInput } from "../../redux/inputSearchSlice";
+import {
+  changeToggleInput,
+  toDisplaySearchingItem,
+} from "../../redux/inputSearchSlice";
 
 const Header = () => {
   const toggleSearchInput = useAppSelector(
@@ -15,7 +18,6 @@ const Header = () => {
   const inputSearchValue = useAppSelector(
     (state) => state.inputSearch.inputSearch.value
   );
-
   const cartList = useAppSelector((state) => state.cartAddedItems.cartList);
 
   const navigate = useNavigate();
@@ -33,14 +35,12 @@ const Header = () => {
       return;
     }
     navigate("/catalog");
-    setTimeout(() => {
-      dispatch(
-        fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
-      );
-    }, 100);
-    // this SetTimeout func is used because when you go to the "/catalog" page,
-    //useEffect sends a "get" request to take all product categories and overwrites
-    //the data received by the request "search"
+    dispatch(
+      fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
+    );
+    dispatch(toDisplaySearchingItem(inputSearchValue));
+    dispatch(addValueInput(""));
+    dispatch(changeToggleInput());
   };
 
   const searchKeyDownHandler = (event: React.KeyboardEvent) => {
@@ -51,14 +51,12 @@ const Header = () => {
       return;
     }
     navigate("/catalog");
-    setTimeout(() => {
-      dispatch(
-        fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
-      );
-    }, 100);
-    // this SetTimeout func is used because when you go to the "/catalog" page,
-    //useEffect sends a "get" request to take all product categories and overwrites
-    //the data received by the request "search"
+    dispatch(
+      fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
+    );
+    dispatch(toDisplaySearchingItem(inputSearchValue));
+    dispatch(addValueInput(""));
+    dispatch(changeToggleInput());
   };
 
   return (

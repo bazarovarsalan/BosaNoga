@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { ICatalogItem } from "../../redux/catalogCategoriesSlice";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchCatalogItems } from "../../redux/catalogItemsSlice";
 import { addValueInput } from "../../redux/inputSearchSlice";
 import { changeToggleInput } from "../../redux/inputSearchSlice";
@@ -18,13 +18,25 @@ const NavButton = ({
 }: PropsNavBtn) => {
   const dispatch = useAppDispatch();
 
+  const searchingVal = useAppSelector(
+    (state) => state.inputSearch.inputSearch.displaySearchingItem
+  );
+
   const handleChangeCategory = (event: React.SyntheticEvent) => {
     handleClickSelect(event);
     dispatch(addValueInput(""));
     dispatch(changeToggleInput());
-    dispatch(
-      fetchCatalogItems({ get: { status: true, id: elem.id.toString() } })
-    );
+    if (searchingVal === "") {
+      dispatch(
+        fetchCatalogItems({ get: { status: true, id: elem.id.toString() } })
+      );
+    } else {
+      dispatch(
+        fetchCatalogItems({
+          search: { status: true, value: searchingVal, id: elem.id.toString() },
+        })
+      );
+    }
   };
 
   return (

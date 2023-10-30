@@ -5,7 +5,7 @@ interface IErrorState {
 const ErrorComponent = ({ repeatSubmit }: IErrorState) => {
   return (
     <div
-      className="alert alert-danger d-flex justify-content-center align-items-center"
+      className="w-100 fs-6 alert alert-danger d-flex justify-content-center align-items-center"
       role="alert"
     >
       Произошла ошибка!

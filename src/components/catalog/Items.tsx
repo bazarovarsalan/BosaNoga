@@ -17,7 +17,7 @@ const Items = ({ image, title, price, id }: ItemsProps) => {
   };
 
   return (
-    <div className="col-md-6 col-lg-4">
+    <div className="card-deck col-md-6 col-lg-4">
       <div className="card catalog-item-card">
         <img className="card-img-top img fluid" src={image}></img>
         <div className="card-body">
