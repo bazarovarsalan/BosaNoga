@@ -51,11 +51,6 @@ const CatalogPage = () => {
     dispatch(toDisplaySearchingItem(inputSearchValue));
   };
 
-  const handleClearInputClick = (event: React.MouseEvent) => {
-    event.preventDefault();
-    dispatch(toDisplaySearchingItem(""));
-  };
-
   return (
     <>
       <main className="container">
