@@ -2,20 +2,13 @@ import "../App.css";
 import banner from "../../assets/banner.jpg";
 import CatalogComponent from "../components/catalog/CatalogComponent";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
-import {
-  addValueInput,
-  toDisplaySearchingItem,
-} from "../redux/inputSearchSlice";
+import { addValueInput } from "../redux/inputSearchSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { fetchCatalogItems } from "../redux/catalogItemsSlice";
 import { changeToggleInput } from "../redux/inputSearchSlice";
 
 const CatalogPage = () => {
-  const displaySearchingValue = useAppSelector(
-    (state) => state.inputSearch.inputSearch.displaySearchingItem
-  );
-
   const inputSearchValue = useAppSelector(
     (state) => state.inputSearch.inputSearch.value
   );
@@ -48,7 +41,6 @@ const CatalogPage = () => {
     dispatch(
       fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
     );
-    dispatch(toDisplaySearchingItem(inputSearchValue));
   };
 
   return (
@@ -67,7 +59,7 @@ const CatalogPage = () => {
                   className="form-control me-2"
                   placeholder="Поиск"
                   onChange={onChangeHandler}
-                  value={displaySearchingValue}
+                  value={inputSearchValue}
                   onKeyDown={searchKeyDownHandler}
                 />
               </form>

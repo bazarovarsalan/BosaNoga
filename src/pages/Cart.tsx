@@ -128,10 +128,10 @@ const Cart = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {cartList.map((o) => {
+                    {cartList.map((o, index) => {
                       return (
                         <tr key={o.id}>
-                          <td scope="row">1</td>
+                          <td scope="row">{index + 1}</td>
                           <td>
                             <a href={`/catalog/:${o.id}`}>{o.title}</a>
                           </td>

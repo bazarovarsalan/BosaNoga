@@ -6,10 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
 import { addValueInput } from "../../redux/inputSearchSlice";
 import { fetchCatalogItems } from "../../redux/catalogItemsSlice";
-import {
-  changeToggleInput,
-  toDisplaySearchingItem,
-} from "../../redux/inputSearchSlice";
+import { changeToggleInput } from "../../redux/inputSearchSlice";
 
 const Header = () => {
   const toggleSearchInput = useAppSelector(
@@ -38,8 +35,6 @@ const Header = () => {
     dispatch(
       fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
     );
-    dispatch(toDisplaySearchingItem(inputSearchValue));
-    dispatch(addValueInput(""));
     dispatch(changeToggleInput());
   };
 
@@ -54,9 +49,6 @@ const Header = () => {
     dispatch(
       fetchCatalogItems({ search: { status: true, value: inputSearchValue } })
     );
-    dispatch(toDisplaySearchingItem(inputSearchValue));
-    dispatch(addValueInput(""));
-    dispatch(changeToggleInput());
   };
 
   return (

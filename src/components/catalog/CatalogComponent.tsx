@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import "../../App.css";
 import NavButton from "./NavButton";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { fetchCatalogItems } from "../../redux/catalogItemsSlice";
+import {
+  fetchCatalogItems,
+  fetchOffsetItems,
+} from "../../redux/catalogItemsSlice";
 import Items from "./Items";
 import { fetchCatalogCategories } from "../../redux/catalogCategoriesSlice";
 import Loading from "../Loading";
@@ -41,7 +44,7 @@ const CatalogComponent = () => {
     setQuontityToPassOffset(6);
   };
 
-  const categoryItems = useAppSelector((state) => state.catalogItems);
+  const items = useAppSelector((state) => state.catalogItems);
   //take catalog items despite of category
 
   useEffect(() => {
@@ -55,7 +58,7 @@ const CatalogComponent = () => {
   const handlerOffset = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     dispatch(
-      fetchCatalogItems({
+      fetchOffsetItems({
         offset: {
           status: true,
           id: selectedCategory.id?.toString(),
@@ -89,24 +92,23 @@ const CatalogComponent = () => {
             );
           })}
       </ul>
-      {categoryItems.status === "loading" && <Loading />}
-      {catalogCategoriesFromServer.status === "resolved" &&
-        categoryItems.items && (
-          <div className="row gy-3">
-            {categoryItems.items.map((o) => {
-              return (
-                <Items
-                  image={o.images[0]}
-                  title={o.title}
-                  price={o.price.toString()}
-                  id={o.id.toString()}
-                  key={o.id}
-                />
-              );
-            })}
-          </div>
-        )}
-      {categoryItems.status === "rejected" && !categoryItems.items && (
+      {items.status === "loading" && <Loading />}
+      {items.status === "resolved" && items.items && (
+        <div className="row gy-3">
+          {items.items.map((o) => {
+            return (
+              <Items
+                image={o.images[0]}
+                title={o.title}
+                price={o.price.toString()}
+                id={o.id.toString()}
+                key={o.id}
+              />
+            );
+          })}
+        </div>
+      )}
+      {items.status === "rejected" && !items && (
         <ErrorComponent
           repeatSubmit={() => {
             dispatch(
@@ -117,7 +119,7 @@ const CatalogComponent = () => {
           }}
         />
       )}
-      {categoryItems.status === "resolved" && !categoryItems.items.length && (
+      {items.status === "resolved" && !items.items.length && (
         <div className="row gy-3">
           <div
             className="card w-120 text-center"
@@ -127,14 +129,13 @@ const CatalogComponent = () => {
           </div>
         </div>
       )}
-      {categoryItems.status === "resolved" &&
-        categoryItems.items.length >= 6 && (
-          <div className="text-center">
-            <button className="btn btn-outline-primary" onClick={handlerOffset}>
-              Загрузить ещё
-            </button>
-          </div>
-        )}
+      {items.status === "resolved" && items.items.length >= 6 && (
+        <div className="text-center">
+          <button className="btn btn-outline-primary" onClick={handlerOffset}>
+            Загрузить ещё
+          </button>
+        </div>
+      )}
     </>
   );
 };

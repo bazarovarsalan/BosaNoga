@@ -41,14 +41,6 @@ export const fetchCatalogItems = createAsyncThunk<
               asyncParams.get.id
             }`
           : `${import.meta.env.VITE_BOSA_NOGA_API}items`;
-      } else if (asyncParams.offset?.status) {
-        return !(asyncParams.offset?.id === "All")
-          ? `${import.meta.env.VITE_BOSA_NOGA_API}items?categoryId=${
-              asyncParams.offset.id
-            }&offset=${asyncParams.offset?.quontityToOffset}`
-          : `${import.meta.env.VITE_BOSA_NOGA_API}items?offset=${
-              asyncParams.offset.quontityToOffset
-            }`;
       } else if (asyncParams.search?.status) {
         return asyncParams.search.id && asyncParams.search?.id !== "All"
           ? `${import.meta.env.VITE_BOSA_NOGA_API}items?categoryId=${
@@ -59,9 +51,37 @@ export const fetchCatalogItems = createAsyncThunk<
             }`;
       }
     };
+
     // this function returns string url adress for fetch depends of type of request
 
     const url = urlFoo() as string;
+    console.log(url);
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      return rejectWithValue("Server error");
+    }
+    const data = await response.json();
+    return data as CatalogItem[];
+  }
+);
+
+export const fetchOffsetItems = createAsyncThunk<
+  CatalogItem[],
+  IAsyncParams,
+  { rejectValue: string }
+>(
+  "catalogItems/fetchOffsetItems",
+  async function (asyncParams, { rejectWithValue }) {
+    // this function returns string url adress for fetch depends of type of request
+
+    const url = !(asyncParams.offset?.id === "All")
+      ? `${import.meta.env.VITE_BOSA_NOGA_API}items?categoryId=${
+          asyncParams.offset?.id
+        }&offset=${asyncParams.offset?.quontityToOffset}`
+      : `${import.meta.env.VITE_BOSA_NOGA_API}items?offset=${
+          asyncParams.offset.quontityToOffset
+        }`;
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -75,7 +95,11 @@ export const fetchCatalogItems = createAsyncThunk<
 const catalogItemsSlice = createSlice({
   name: "catalogItems",
   initialState,
-  reducers: {},
+  reducers: {
+    addOffsetData: (state, action) => {
+      state.items = [...state.items, ...action.payload];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCatalogItems.pending, (state) => {
@@ -87,6 +111,18 @@ const catalogItemsSlice = createSlice({
         (state, action: PayloadAction<CatalogItem[]>) => {
           state.status = "resolved";
           state.items = action.payload;
+        }
+      );
+    builder
+      .addCase(fetchOffsetItems.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(
+        fetchOffsetItems.fulfilled,
+        (state, action: PayloadAction<CatalogItem[]>) => {
+          state.status = "resolved";
+          state.items = [...state.items, ...action.payload];
         }
       )
       .addMatcher(isError, (state, action: PayloadAction<string>) => {
